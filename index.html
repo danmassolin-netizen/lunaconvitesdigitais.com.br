@@ -2,13 +2,13 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Luna convites Digitais</title>
+    <title>Luna Convites Digitais</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
             color: #ffffff;
             display: flex;
@@ -53,6 +53,11 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
     </style>
+
+    <script>
+        // 🔧 EDITE AQUI se mudar o Instagram no futuro
+        const instagramURL = "https://www.instagram.com/lunaconvitesdigitais/";
+    </script>
 </head>
 <body>
 
@@ -64,10 +69,11 @@
         </p>
 
         <a 
-            class="instagram-btn" 
-            href="https://www.instagram.com/lunaconvitesdigitais/" 
+            class="instagram-btn"
+            href="#"
             target="_blank"
-            aria-label="Visitar Instagram da Luna convites digitais"
+            aria-label="Visitar Instagram da Luna Convites Digitais"
+            onclick="this.href = instagramURL"
         >
             Visite nosso Instagram
         </a>
