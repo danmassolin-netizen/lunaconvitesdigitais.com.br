@@ -20,10 +20,13 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Remove o brilho azul ao clicar no Android/iOS */
         }
 
         body {
             background: #000;
+            /* Suporte para navegadores que não entendem dvh */
+            height: 100vh;
             height: 100dvh;
             width: 100vw;
             overflow: hidden;
@@ -36,7 +39,7 @@
         .page {
             display: none;
             width: 100%;
-            height: 100dvh;
+            height: 100%;
             position: relative;
             max-width: 500px; 
             margin: 0 auto;
@@ -77,11 +80,12 @@
         }
 
         /* =========================================================
-           ESTILO DO BOTÃO FLUTUANTE (CANTO SUPERIOR ESQUERDO)
+           ESTILO DO BOTÃO FLUTUANTE (AJUSTADO PARA SAFARI/CHROME)
            =========================================================
         */
         #btn-musica {
             position: fixed;
+            /* env(safe-area-inset-top) garante que não fique embaixo da câmera do iPhone */
             top: calc(2% + env(safe-area-inset-top));
             left: 5%;
             width: 45px;
@@ -89,18 +93,18 @@
             background-color: var(--cor-do-botao);
             border-radius: 50%;
             z-index: 100;
-            display: none; /* Inicia oculto, aparece no start */
+            display: none; 
             justify-content: center;
             align-items: center;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             cursor: pointer;
             animation: pulse-simples 2s infinite;
+            border: none;
+            outline: none;
         }
 
-        /* Ícone de Som (Play) */
         .icon-play { width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 12px solid var(--cor-do-icone); margin-left: 4px; }
         
-        /* Ícone de Pause (Dois traços) */
         .icon-pause { display: flex; gap: 4px; }
         .icon-pause div { width: 4px; height: 15px; background-color: var(--cor-do-icone); }
 
@@ -114,7 +118,7 @@
 
 <body>
 
-<audio id="musica" src="audio.mp3" loop></audio>
+<audio id="musica" src="audio.mp3" loop preload="auto"></audio>
 
 <div id="btn-musica" onclick="toggleMusica()">
     <div id="container-icone">
@@ -131,7 +135,7 @@
 
 <div class="page" id="page2">
     <div class="content-wrapper">
-        <video id="video" src="pagina2.mp4" playsinline webkit-playsinline></video>
+        <video id="video" src="pagina2.mp4" playsinline webkit-playsinline preload="auto"></video>
     </div>
 </div>
 
@@ -180,12 +184,24 @@
     const containerIcone = document.getElementById('container-icone');
 
     function startInvite() {
+        // iOS exige que o play ocorra dentro de uma função de clique
         musica.play().then(() => {
             btnMusica.style.display = 'flex';
-        }).catch(e => console.log("Áudio aguardando interação"));
+        }).catch(e => {
+            console.log("Autoplay bloqueado, aguardando interação.");
+        });
         
         goPage(2);
-        video.play();
+        
+        // Garante que o vídeo toque mesmo em modo de economia de energia
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                // Se falhar (comum no Safari), tenta tocar mudo para não travar a experiência
+                video.muted = true;
+                video.play();
+            });
+        }
 
         video.onended = () => {
             goPage(3);
