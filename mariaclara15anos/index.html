@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
     <title>Convite Maria Clara 15 anos</title>
 
     <style>
-        /* =========================================
-           CONFIGURAÇÃO DE CORES EDITÁVEIS
-           ========================================= */
+        /* =========================================================
+           1. ÁREA DE EDIÇÃO DE CORES (PARA AS ALUNAS)
+           =========================================================
+        */
         :root {
-            --cor-botao-flutuante: #ffffff; /* ALTERE AQUI A COR DO BOTÃO */
-            --cor-icone-musica: #000000;    /* COR DO TEXTO/ÍCONE DENTRO DO BOTÃO */
+            --cor-do-botao: #ffffff; /* Altere aqui a cor do círculo */
+            --cor-do-icone: #000000; /* Altere aqui a cor do ícone (som/pause) */
         }
 
         * {
@@ -34,7 +36,7 @@
         .page {
             display: none;
             width: 100%;
-            height: 100%;
+            height: 100dvh;
             position: relative;
             max-width: 500px; 
             margin: 0 auto;
@@ -52,6 +54,9 @@
             position: relative;
             width: 100%;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .hotspot {
@@ -60,10 +65,9 @@
             z-index: 10;
         }
 
-        /* Botão Voltar */
         .btn-voltar {
             position: absolute;
-            top: calc(5% + env(safe-area-inset-top));
+            top: 5%;
             right: 5%;
             width: 12%;
             aspect-ratio: 1/1;
@@ -72,33 +76,38 @@
             z-index: 20;
         }
 
-        /* BOTÃO FLUTUANTE COM COR EDITÁVEL */
+        /* =========================================================
+           ESTILO DO BOTÃO FLUTUANTE (CANTO SUPERIOR ESQUERDO)
+           =========================================================
+        */
         #btn-musica {
             position: fixed;
-            bottom: calc(20px + env(safe-area-inset-bottom));
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--cor-botao-flutuante);
-            border: 1px solid rgba(0,0,0,0.1);
+            top: calc(2% + env(safe-area-inset-top));
+            left: 5%;
+            width: 45px;
+            height: 45px;
+            background-color: var(--cor-do-botao);
             border-radius: 50%;
-            display: none; 
+            z-index: 100;
+            display: none; /* Inicia oculto, aparece no start */
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
             cursor: pointer;
-            color: var(--cor-icone-musica);
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            animation: pulse 2s infinite;
-            box-shadow: 0 0 15px var(--cor-botao-flutuante);
+            animation: pulse-simples 2s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 var(--cor-botao-flutuante); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        /* Ícone de Som (Play) */
+        .icon-play { width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 12px solid var(--cor-do-icone); margin-left: 4px; }
+        
+        /* Ícone de Pause (Dois traços) */
+        .icon-pause { display: flex; gap: 4px; }
+        .icon-pause div { width: 4px; height: 15px; background-color: var(--cor-do-icone); }
+
+        @keyframes pulse-simples {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -108,7 +117,9 @@
 <audio id="musica" src="audio.mp3" loop></audio>
 
 <div id="btn-musica" onclick="toggleMusica()">
-    <span id="music-icon">PAUSE</span>
+    <div id="container-icone">
+        <div class="icon-pause"><div></div><div></div></div>
+    </div>
 </div>
 
 <div class="page" id="page1" style="display:block;">
@@ -128,19 +139,23 @@
     <div class="content-wrapper">
         <img src="pagina3.jpg">
 
-        <a class="hotspot" 
-           style="bottom:28%; left:18%; width:15%; height:12%;" 
-           href="https://wa.me/5571983868333?text=Gostaria%20de%20confirmar%20presen%C3%A7a" 
+        <a class="hotspot"
+           style="bottom:28%; left:18%; width:15%; height:12%;"
+           href="https://wa.me/5571983868383?text=Gostaria%20de%20confirmar%20presen%C3%A7a"
            target="_blank"></a>
 
-        <a class="hotspot" 
-           style="bottom:28%; left:35%; width:15%; height:12%;" 
-           href="https://maps.google.com/?q=LOCAL_DA_FESTA" 
+        <a class="hotspot"
+           style="bottom:28%; left:35%; width:15%; height:12%;"
+            href="https://maps.app.goo.gl/DqbXn5Nz9gSzQmSCA"
            target="_blank"></a>
 
-        <div class="hotspot" style="bottom:28%; left:51%; width:15%; height:12%;" onclick="goPage(4)"></div>
+        <div class="hotspot"
+             style="bottom:28%; left:51%; width:15%; height:12%;"
+             onclick="goPage(4)"></div>
 
-        <div class="hotspot" style="bottom:28%; left:68%; width:15%; height:12%;" onclick="goPage(5)"></div>
+        <div class="hotspot" 
+             style="bottom:28%; left:68%; width:15%; height:12%;" 
+             onclick="goPage(5)"></div>
     </div>
 </div>
 
@@ -162,19 +177,15 @@
     const musica = document.getElementById('musica');
     const video = document.getElementById('video');
     const btnMusica = document.getElementById('btn-musica');
-    const musicIcon = document.getElementById('music-icon');
+    const containerIcone = document.getElementById('container-icone');
 
     function startInvite() {
         musica.play().then(() => {
             btnMusica.style.display = 'flex';
         }).catch(e => console.log("Áudio aguardando interação"));
-
-        goPage(2);
         
-        video.play().catch(error => {
-            video.muted = true;
-            video.play();
-        });
+        goPage(2);
+        video.play();
 
         video.onended = () => {
             goPage(3);
@@ -184,10 +195,10 @@
     function toggleMusica() {
         if (musica.paused) {
             musica.play();
-            musicIcon.innerText = 'PAUSE';
+            containerIcone.innerHTML = '<div class="icon-pause"><div></div><div></div></div>';
         } else {
             musica.pause();
-            musicIcon.innerText = 'PLAY';
+            containerIcone.innerHTML = '<div class="icon-play"></div>';
         }
     }
 
