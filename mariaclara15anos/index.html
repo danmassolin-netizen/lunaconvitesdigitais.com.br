@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Convite Leticia 15 anos</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            /* Suporte para navegadores antigos e novos */
+            height: 100vh;
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            max-width: 500px; 
+            margin: 0 auto;
+        }
+
+        .page img,
+        .page video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            display: block;
+        }
+
+        .content-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Botão Voltar Ajustado para Safe Areas */
+        .btn-voltar {
+            position: absolute;
+            top: calc(5% + env(safe-area-inset-top));
+            right: 5%;
+            width: 12%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        /* Botão Flutuante Play/Pause */
+        #btn-musica {
+            position: fixed;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: none; /* Aparece após o start */
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+    </style>
+</head>
+
+<body>
+
+<audio id="musica" src="audio.mp3" loop></audio>
+
+<div id="btn-musica" onclick="toggleMusica()">
+    <span id="music-icon">pause</span>
+</div>
+
+<div class="page" id="page1" style="display:block;">
+    <div class="content-wrapper" onclick="startInvite()">
+        <img src="pagina1.jpg">
+        <div class="hotspot" style="top:0; left:0; width:100%; height:100%;"></div>
+    </div>
+</div>
+
+<div class="page" id="page2">
+    <div class="content-wrapper">
+        <video id="video" src="pagina2.mp4" playsinline webkit-playsinline></video>
+    </div>
+</div>
+
+<div class="page" id="page3">
+    <div class="content-wrapper">
+        <img src="pagina3.jpg">
+
+        <a class="hotspot" style="bottom:28%; left:18%; width:15%; height:12%;" href="https://wa.me/5571993233142?text=Gostaria%20de%20confirmar%20presen%C3%A7a" target="_blank"></a>
+        <a class="hotspot" style="bottom:28%; left:35%; width:15%; height:12%;" href="https://maps.app.goo.gl/DqbXn5Nz9gSzQmSCA" target="_blank"></a>
+        <div class="hotspot" style="bottom:28%; left:51%; width:15%; height:12%;" onclick="goPage(4)"></div>
+        <div class="hotspot" style="bottom:28%; left:68%; width:15%; height:12%;" onclick="goPage(5)"></div>
+    </div>
+</div>
+
+<div class="page" id="page4">
+    <div class="content-wrapper">
+        <img src="pagina4.jpg">
+        <div class="btn-voltar" onclick="goPage(3)"></div>
+    </div>
+</div>
+
+<div class="page" id="page5">
+    <div class="content-wrapper">
+        <img src="pagina5.jpg">
+        <div class="btn-voltar" onclick="goPage(3)"></div>
+    </div>
+</div>
+
+<script>
+    const musica = document.getElementById('musica');
+    const video = document.getElementById('video');
+    const btnMusica = document.getElementById('btn-musica');
+    const musicIcon = document.getElementById('music-icon');
+
+    function startInvite() {
+        // Tenta tocar a música
+        musica.play().then(() => {
+            btnMusica.style.display = 'flex'; // Só mostra o botão se a música começar
+        }).catch(e => console.log("Erro ao iniciar áudio"));
+
+        goPage(2);
+        
+        // No iOS, vídeos precisam de interação ou estar mudos
+        video.play().catch(error => {
+            console.log("Vídeo bloqueado pelo navegador, tentando com mute...");
+            video.muted = true;
+            video.play();
+        });
+
+        video.onended = () => {
+            goPage(3);
+        };
+    }
+
+    function toggleMusica() {
+        if (musica.paused) {
+            musica.play();
+            musicIcon.innerText = 'pause';
+        } else {
+            musica.pause();
+            musicIcon.innerText = 'play';
+        }
+    }
+
+    function goPage(num) {
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        const targetPage = document.getElementById('page' + num);
+        if (targetPage) {
+            targetPage.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
