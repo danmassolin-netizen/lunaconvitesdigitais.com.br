@@ -6,6 +6,14 @@
     <title>Convite Maria Clara 15 anos</title>
 
     <style>
+        /* =========================================
+           CONFIGURAÇÃO DE CORES EDITÁVEIS
+           ========================================= */
+        :root {
+            --cor-botao-flutuante: #ffffff; /* ALTERE AQUI A COR DO BOTÃO */
+            --cor-icone-musica: #000000;    /* COR DO TEXTO/ÍCONE DENTRO DO BOTÃO */
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,8 +22,6 @@
 
         body {
             background: #000;
-            /* Suporte para navegadores antigos e novos */
-            height: 100vh;
             height: 100dvh;
             width: 100vw;
             overflow: hidden;
@@ -54,7 +60,7 @@
             z-index: 10;
         }
 
-        /* Botão Voltar Ajustado para Safe Areas */
+        /* Botão Voltar */
         .btn-voltar {
             position: absolute;
             top: calc(5% + env(safe-area-inset-top));
@@ -66,29 +72,31 @@
             z-index: 20;
         }
 
-        /* Botão Flutuante Play/Pause */
+        /* BOTÃO FLUTUANTE COM COR EDITÁVEL */
         #btn-musica {
             position: fixed;
             bottom: calc(20px + env(safe-area-inset-bottom));
             right: 20px;
             width: 50px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: var(--cor-botao-flutuante);
+            border: 1px solid rgba(0,0,0,0.1);
             border-radius: 50%;
-            display: none; /* Aparece após o start */
+            display: none; 
             justify-content: center;
             align-items: center;
             z-index: 100;
             cursor: pointer;
-            color: white;
-            font-size: 20px;
+            color: var(--cor-icone-musica);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
             animation: pulse 2s infinite;
+            box-shadow: 0 0 15px var(--cor-botao-flutuante);
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 var(--cor-botao-flutuante); }
             70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
@@ -100,7 +108,7 @@
 <audio id="musica" src="audio.mp3" loop></audio>
 
 <div id="btn-musica" onclick="toggleMusica()">
-    <span id="music-icon">pause</span>
+    <span id="music-icon">PAUSE</span>
 </div>
 
 <div class="page" id="page1" style="display:block;">
@@ -120,9 +128,18 @@
     <div class="content-wrapper">
         <img src="pagina3.jpg">
 
-        <a class="hotspot" style="bottom:28%; left:18%; width:15%; height:12%;" href="https://wa.me/5571993233142?text=Gostaria%20de%20confirmar%20presen%C3%A7a" target="_blank"></a>
-        <a class="hotspot" style="bottom:28%; left:35%; width:15%; height:12%;" href="https://maps.app.goo.gl/DqbXn5Nz9gSzQmSCA" target="_blank"></a>
+        <a class="hotspot" 
+           style="bottom:28%; left:18%; width:15%; height:12%;" 
+           href="https://wa.me/5571983868333?text=Gostaria%20de%20confirmar%20presen%C3%A7a" 
+           target="_blank"></a>
+
+        <a class="hotspot" 
+           style="bottom:28%; left:35%; width:15%; height:12%;" 
+           href="https://maps.google.com/?q=LOCAL_DA_FESTA" 
+           target="_blank"></a>
+
         <div class="hotspot" style="bottom:28%; left:51%; width:15%; height:12%;" onclick="goPage(4)"></div>
+
         <div class="hotspot" style="bottom:28%; left:68%; width:15%; height:12%;" onclick="goPage(5)"></div>
     </div>
 </div>
@@ -148,16 +165,13 @@
     const musicIcon = document.getElementById('music-icon');
 
     function startInvite() {
-        // Tenta tocar a música
         musica.play().then(() => {
-            btnMusica.style.display = 'flex'; // Só mostra o botão se a música começar
-        }).catch(e => console.log("Erro ao iniciar áudio"));
+            btnMusica.style.display = 'flex';
+        }).catch(e => console.log("Áudio aguardando interação"));
 
         goPage(2);
         
-        // No iOS, vídeos precisam de interação ou estar mudos
         video.play().catch(error => {
-            console.log("Vídeo bloqueado pelo navegador, tentando com mute...");
             video.muted = true;
             video.play();
         });
@@ -170,10 +184,10 @@
     function toggleMusica() {
         if (musica.paused) {
             musica.play();
-            musicIcon.innerText = 'pause';
+            musicIcon.innerText = 'PAUSE';
         } else {
             musica.pause();
-            musicIcon.innerText = 'play';
+            musicIcon.innerText = 'PLAY';
         }
     }
 
