@@ -205,8 +205,8 @@ Lei 9.610/98 – Direitos Autorais.
         // DUCKING DE ÁUDIO
         video.addEventListener('timeupdate', function() {
             let tempo = video.currentTime;
-            const fala1 = (tempo >= 9 && tempo <= 13);
-            const fala2 = (tempo >= 27 && tempo <= 31);
+            const fala1 = (tempo >= 1 && tempo <= 10);
+            const fala2 = false; // Esta o código vai ignorar sempre;
 
             if (fala1 || fala2) {
                 musica.volume = 0.2;
