@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lucas 1 Ano</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    
+    html, body { 
+        width: 100%; height: 100%; 
+        background: #000; overflow: hidden; position: fixed; 
+        font-family: 'Arial', sans-serif; -webkit-font-smoothing: antialiased; 
+    }
+    
+  
+        document.getElementById('se').innerText = pad(Math.floor((diff % 60000) / 1000));
+    }
+    setInterval(updateTimer, 1000); updateTimer();
+    
+    
+    document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+</body>
+</html>
