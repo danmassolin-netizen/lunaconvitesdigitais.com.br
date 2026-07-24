@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Convite</title>
+
+<link rel="preload" href="convite.mp4" as="video" type="video/mp4">
+
+<style>
+
+:root{
+
+    --play-color:#D4AF37;
+    --background:#000000;
+    --play-size:92px;
+    --transition:.35s;
+
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html{
+    width:100%;
+    height:100%;
+    background:var(--background);
+}
+
+body{
+
+    width:100%;
+    min-height:100dvh;
+    height:100dvh;
+
+    background:var(--background);
+
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:
+        env(safe-area-inset-top)
+        env(safe-area-inset-right)
+        env(safe-area-inset-bottom)
+        env(safe-area-inset-left);
+
+    touch-action:manipulation;
+
+}
+
+#player{
+
+    position:relative;
+
+    width:100%;
+    height:100dvh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
+
+    background:#000;
+
+}
+
+video{
+
+    width:100%;
+    height:100dvh;
+
+    object-fit:contain;
+
+    background:#000;
+
+    display:block;
+
+}
+
+#overlay{
+
+    position:absolute;
+    inset:0;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(0,0,0,.20);
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    z-index:10;
+
+}
+
+#overlay.hidden{
+
+    opacity:0;
+    pointer-events:none;
+
+}
+
+#play{
+
+    width:var(--play-size);
+    height:var(--play-size);
+
+    border-radius:50%;
+
+    border:3px solid var(--play-color);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    backdrop-filter:blur(6px);
+
+    background:rgba(0,0,0,.25);
+
+    box-shadow:
+
+    0 0 15px rgba(212,175,55,.35),
+    0 0 35px rgba(212,175,55,.15);
+
+    transition:var(--transition);
+
+    animation:pulse 2s infinite;
+
+}
+
+#play:hover{
+
+    transform:scale(1.08);
+
+}
+
+#play svg{
+
+    width:36px;
+    height:36px;
+    margin-left:5px;
+
+    fill:var(--play-color);
+
+}
+
+@keyframes pulse{
+
+0%{
+
+transform:scale(1);
+
+box-shadow:
+0 0 0 0 rgba(212,175,55,.50);
+
+}
+
+70%{
+
+box-shadow:
+0 0 0 24px rgba(212,175,55,0);
+
+}
+
+100%{
+
+transform:scale(1);
+
+box-shadow:
+0 0 0 0 rgba(212,175,55,0);
+
+}
+
+}
+
+#replay{
+
+    position:absolute;
+
+    inset:0;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
+    background:rgba(0,0,0,.55);
+
+    z-index:20;
+
+}
+
+#replay button{
+
+    padding:16px 34px;
+
+    border:none;
+
+    border-radius:50px;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    color:#000;
+
+    background:var(--play-color);
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+#replay button:hover{
+
+    transform:scale(1.05);
+
+}
+
+@supports(height:100svh){
+
+body,
+#player,
+video{
+
+height:100svh;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="player">
+
+<video
+id="video"
+playsinline
+webkit-playsinline
+preload="auto"
+disablepictureinpicture
+controlslist="nodownload noplaybackrate nofullscreen"
+>
+
+<source src="convite.mp4" type="video/mp4">
+
+</video>
+
+<div id="overlay">
+
+<div id="play">
+
+<svg viewBox="0 0 64 64">
+
+<polygon points="20,14 52,32 20,50"/>
+
+</svg>
+
+</div>
+
+</div>
+
+<div id="replay">
+
+<button id="btnReplay">
+
+▶ Assistir novamente
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const video=document.getElementById("video");
+
+const overlay=document.getElementById("overlay");
+
+const replay=document.getElementById("replay");
+
+const btnReplay=document.getElementById("btnReplay");
+
+function iniciar(){
+
+overlay.classList.add("hidden");
+
+video.currentTime=0;
+
+video.play();
+
+if(video.requestFullscreen){
+
+// opcional desktop
+
+}
+
+}
+
+overlay.addEventListener("click",iniciar);
+
+btnReplay.addEventListener("click",()=>{
+
+replay.style.display="none";
+
+overlay.classList.add("hidden");
+
+video.currentTime=0;
+
+video.play();
+
+});
+
+video.addEventListener("ended",()=>{
+
+replay.style.display="flex";
+
+});
+
+video.addEventListener("pause",()=>{
+
+if(video.currentTime<video.duration){
+
+}
+
+});
+
+document.addEventListener("visibilitychange",()=>{
+
+if(!document.hidden){
+
+video.playsInline=true;
+
+}
+
+});
+
+window.addEventListener("resize",()=>{
+
+document.body.style.height=window.innerHeight+"px";
+
+});
+
+window.dispatchEvent(new Event("resize"));
+
+</script>
+
+</body>
+</html>
